@@ -1,6 +1,5 @@
 package com.oostolas.dline;
 
-import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
         if(cursor.moveToFirst()) {
             int dateColumnIndex = cursor.getColumnIndex(DbHelper.DATE);
             int commentColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
-            for(int id = 0; id == 0 || cursor.moveToNext(); id++)
+            int idColumnIndex = cursor.getColumnIndex("_id");
+            while(cursor.moveToNext())
                 listItems.add(new ListItem(
-                        id,
+                        cursor.getInt(idColumnIndex),
                         new Date(cursor.getLong(dateColumnIndex) - System.currentTimeMillis()),
                         cursor.getString(commentColumnIndex)
                 ));
@@ -67,14 +67,21 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+            public boolean onItemLongClick(final AdapterView<?> arg0, View arg1, int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                final ListItem listItem = (ListItem) arg0.getItemAtPosition(position);
                 builder
                         .setMessage("Delete?")
                         .setPositiveButton("Yes",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-
+                                        adapter.remove(listItem);
+                                        SQLiteDatabase database = dbHelper.getWritableDatabase();
+                                        database.delete(DbHelper.TABLE_NAME,"_id=" + listItem.id, null);
+                                        database.close();
+                                        primaryTimeIndex = -1;
+                                        synchDatabase();
+                                        adapter.notifyDataSetChanged();
                                         dialog.cancel();
                                     }
                                 })

@@ -8,7 +8,7 @@ public class ListItem {
     public String name;
 
     public ListItem(int id, Date date, String name){
-
+        this.id = id;
         this.date = date;
         this.name = name;
     }
