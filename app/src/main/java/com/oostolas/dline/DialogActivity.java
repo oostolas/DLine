@@ -17,6 +17,7 @@ public class DialogActivity extends Activity {
 
     private TimePicker timePicker;
     private EditText editTextName;
+    private String id;
     private long date;
 
     @Override
@@ -27,6 +28,10 @@ public class DialogActivity extends Activity {
         editTextName = findViewById(R.id.editTextName);
         CalendarView calendarView = findViewById(R.id.calendarView);
         Calendar calendar = new GregorianCalendar();
+        Intent data = getIntent();
+        id = data.getStringExtra("id");
+        String name = data.getStringExtra("name");
+        if(name != null) editTextName.setText(name);
         date = (new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))).getTime().getTime();
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -44,6 +49,7 @@ public class DialogActivity extends Activity {
         else
             date = date + (timePicker.getCurrentHour() * 3600000) + (timePicker.getCurrentMinute() * 60000);
         Intent intent = new Intent();
+        intent.putExtra("id", id);
         intent.putExtra("name", editTextName.getText().toString());
         intent.putExtra("date", date);
         setResult(RESULT_OK, intent);

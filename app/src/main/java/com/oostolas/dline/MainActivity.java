@@ -34,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = database.query(DbHelper.TABLE_NAME, null, null, null, null,null,DbHelper.DATE + " ASC");
         if(cursor.moveToFirst()) {
             int dateColumnIndex = cursor.getColumnIndex(DbHelper.DATE);
-            int commentColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
+            int nameColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
             int idColumnIndex = cursor.getColumnIndex("_id");
             while(cursor.moveToNext())
                 listItems.add(new ListItem(
                         cursor.getInt(idColumnIndex),
                         new Date(cursor.getLong(dateColumnIndex) - System.currentTimeMillis()),
-                        cursor.getString(commentColumnIndex)
+                        cursor.getString(nameColumnIndex)
                 ));
             cursor.close();
         }
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
         adapter = new ListAdapter(this, listItems);
         listView.setAdapter(adapter);
+
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> arg0, View arg1, int position, long id) {
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                         synchDatabase();
                                         adapter.notifyDataSetChanged();
                                         dialog.cancel();
+                                        Toast.makeText(getApplicationContext(), "Deleted.", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                         .setNegativeButton("No",
@@ -93,18 +96,28 @@ public class MainActivity extends AppCompatActivity {
                                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-
-                Toast.makeText(getApplicationContext(), "long clicked", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, DialogActivity.class);
-                startActivityForResult(intent, 1);
-                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+                final ListItem listItem = (ListItem) arg0.getItemAtPosition(position);
+                SQLiteDatabase database = dbHelper.getWritableDatabase();
+                Cursor cursor = database.query(DbHelper.TABLE_NAME, null, "_id = " + listItem.id, null, null,null,null);
+                cursor.moveToFirst();
+                int dateColumnIndex = cursor.getColumnIndex(DbHelper.DATE);
+                int nameColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
+                long date = cursor.getLong(dateColumnIndex);
+                String name = cursor.getString(nameColumnIndex);
+                cursor.close();
+                database.close();
+
+                intent.putExtra("id", Integer.toString(listItem.id));
+                intent.putExtra("date", date);
+                intent.putExtra("name", name);
+                startActivityForResult(intent, 2);
             }
         });
         adapter.notifyDataSetChanged();
@@ -179,7 +192,11 @@ public class MainActivity extends AppCompatActivity {
         String name = data.getStringExtra("name");
         contentValues.put(DbHelper.DATE, date.getTime());
         contentValues.put(DbHelper.NAME, name);
-        database.insert(DbHelper.TABLE_NAME, null, contentValues);
+        if(requestCode == 1) database.insert(DbHelper.TABLE_NAME, null, contentValues);
+        else {
+            database.update(DbHelper.TABLE_NAME, contentValues, "_id = ?", new String[]{data.getStringExtra("id")});
+            Toast.makeText(getApplicationContext(), data.getStringExtra("id"), Toast.LENGTH_SHORT).show();
+        }
         database.close();
         synchDatabase();
         adapter.notifyDataSetChanged();
