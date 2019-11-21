@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
             int dateColumnIndex = cursor.getColumnIndex(DbHelper.DATE);
             int nameColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
             int idColumnIndex = cursor.getColumnIndex("_id");
-            while(cursor.moveToNext())
-                listItems.add(new ListItem(
+            do listItems.add(new ListItem(
                         cursor.getInt(idColumnIndex),
                         new Date(cursor.getLong(dateColumnIndex) - System.currentTimeMillis()),
                         cursor.getString(nameColumnIndex)
                 ));
+            while(cursor.moveToNext());
             cursor.close();
         }
         database.close();
