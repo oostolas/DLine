@@ -34,6 +34,18 @@ public class DialogActivity extends Activity {
         id = data.getStringExtra("id");
         String name = data.getStringExtra("name");
         String comment = data.getStringExtra("comment");
+        long time = data.getLongExtra("date", 0L);
+        if(time != 0) {
+            calendar.setTimeInMillis(time);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                timePicker.setMinute(calendar.get(Calendar.MINUTE));
+                timePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+            }  else {
+                timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
+                timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
+            }
+            calendarView.setDate(time);
+        }
         if(name != null) editTextName.setText(name);
         if(comment != null) editTextComment.setText(comment);
         date = (new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))).getTime().getTime();
