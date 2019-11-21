@@ -17,6 +17,7 @@ public class DialogActivity extends Activity {
 
     private TimePicker timePicker;
     private EditText editTextName;
+    private EditText editTextComment;
     private String id;
     private long date;
 
@@ -26,12 +27,15 @@ public class DialogActivity extends Activity {
         setContentView(R.layout.dialog);
         timePicker = findViewById(R.id.timePicker);
         editTextName = findViewById(R.id.editTextName);
+        editTextComment = findViewById(R.id.editTextComment);
         CalendarView calendarView = findViewById(R.id.calendarView);
         Calendar calendar = new GregorianCalendar();
         Intent data = getIntent();
         id = data.getStringExtra("id");
         String name = data.getStringExtra("name");
+        String comment = data.getStringExtra("comment");
         if(name != null) editTextName.setText(name);
+        if(comment != null) editTextComment.setText(comment);
         date = (new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))).getTime().getTime();
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -52,6 +56,7 @@ public class DialogActivity extends Activity {
         intent.putExtra("id", id);
         intent.putExtra("name", editTextName.getText().toString());
         intent.putExtra("date", date);
+        intent.putExtra("comment", editTextComment.getText().toString());
         setResult(RESULT_OK, intent);
         finish();
     }

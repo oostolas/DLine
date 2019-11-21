@@ -22,7 +22,7 @@
                 android:gravity="start|top"
                 android:hint="@string/app_name"
                 android:importantForAutofill="no"
-                android:inputType="textMultiLine"
+                android:inputType="textShortMessage"
                 android:scrollbars="vertical"
                 android:textColorLink="@color/primaryColor" />
 
@@ -36,6 +36,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:selectedWeekBackgroundColor="@color/primaryColor" />
+
+            <EditText
+                android:id="@+id/editTextComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/app_name"
+                android:importantForAutofill="no"
+                android:inputType="textLongMessage|textMultiLine" />
 
             <Button
                 android:id="@+id/button"

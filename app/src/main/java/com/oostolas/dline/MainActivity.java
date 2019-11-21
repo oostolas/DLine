@@ -109,14 +109,17 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToFirst();
                 int dateColumnIndex = cursor.getColumnIndex(DbHelper.DATE);
                 int nameColumnIndex = cursor.getColumnIndex(DbHelper.NAME);
+                int commentColumnIndex = cursor.getColumnIndex(DbHelper.COMMENT);
                 long date = cursor.getLong(dateColumnIndex);
                 String name = cursor.getString(nameColumnIndex);
+                String comment = cursor.getString(commentColumnIndex);
                 cursor.close();
                 database.close();
 
                 intent.putExtra("id", Integer.toString(listItem.id));
                 intent.putExtra("date", date);
                 intent.putExtra("name", name);
+                intent.putExtra("comment", comment);
                 startActivityForResult(intent, 2);
             }
         });
@@ -190,8 +193,10 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         Date date = new Date(data.getLongExtra("date", 0L));
         String name = data.getStringExtra("name");
+        String comment = data.getStringExtra("comment");
         contentValues.put(DbHelper.DATE, date.getTime());
         contentValues.put(DbHelper.NAME, name);
+        contentValues.put(DbHelper.COMMENT, comment);
         if(requestCode == 1) database.insert(DbHelper.TABLE_NAME, null, contentValues);
         else {
             database.update(DbHelper.TABLE_NAME, contentValues, "_id = ?", new String[]{data.getStringExtra("id")});
