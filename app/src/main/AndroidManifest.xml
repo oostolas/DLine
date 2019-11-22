@@ -21,7 +21,8 @@
 
         <activity
             android:name=".DialogActivity"
-            android:theme="@style/DialogTheme"/>
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

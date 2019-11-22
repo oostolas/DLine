@@ -26,6 +26,7 @@ public class DialogActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog);
         timePicker = findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
         editTextName = findViewById(R.id.editTextName);
         editTextComment = findViewById(R.id.editTextComment);
         CalendarView calendarView = findViewById(R.id.calendarView);

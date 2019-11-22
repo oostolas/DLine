@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
         database.close();
+        primaryTimeIndex = -1;
+        textTimer.setText(getResources().getString(R.string.timerEmpty));
         for(int i = 0; i < listItems.size(); i++) {
             if(listItems.get(i).date.getTime() > 0) {
                 primaryTimeIndex = i;
@@ -81,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                                         SQLiteDatabase database = dbHelper.getWritableDatabase();
                                         database.delete(DbHelper.TABLE_NAME,"_id=" + listItem.id, null);
                                         database.close();
-                                        primaryTimeIndex = -1;
                                         synchDatabase();
                                         adapter.notifyDataSetChanged();
                                         dialog.cancel();

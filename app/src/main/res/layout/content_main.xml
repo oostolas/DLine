@@ -29,7 +29,6 @@
         android:layout_weight="0"
         android:background="@color/primaryColor"
         android:gravity="center"
-        android:padding="5dp"
         android:textSize="24sp" />
 
     <ListView

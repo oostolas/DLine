@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">DLine</string>
     <string name="action_settings">Settings</string>
-    <string name="timerEmpty">-:-:-:-</string>
+    <string name="timerEmpty">--:--:--:----</string>
+    <string name="task">Имя задачи</string>
+    <string name="comment">Комментарий</string>
+    <string name="save">Сохранить</string>
 </resources>
